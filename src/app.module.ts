@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { appConfig, jwtConfig } from './config';
+import { PrismaModule } from './prisma/prisma.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { BrandsModule } from './modules/brands/brands.module';
+import { ProductsModule } from './modules/products/products.module';
 
 @Module({
   imports: [
@@ -12,6 +16,10 @@ import { appConfig, jwtConfig } from './config';
         abortEarly: true,
       },
     }),
+    PrismaModule,
+    CategoriesModule,
+    BrandsModule,
+    ProductsModule,
   ],
 })
 export class AppModule {}
