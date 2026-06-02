@@ -5,3 +5,4 @@ export * from './product.interface';
 export * from './order.interface';
 export * from './review.interface';
 export * from './builder-part.interface';
+export * from './wishlist-item.interface';

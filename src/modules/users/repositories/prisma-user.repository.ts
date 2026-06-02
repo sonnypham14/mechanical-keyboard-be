@@ -32,6 +32,16 @@ export class PrismaUserRepository implements IUserRepository {
     return { ...this.mapOne(user), password: user.password };
   }
 
+  async findByIdWithPassword(
+    id: string,
+  ): Promise<(IUser & { password: string }) | null> {
+    const user = await this.prisma.user.findFirst({
+      where: { id, deletedAt: null },
+    });
+    if (!user) return null;
+    return { ...this.mapOne(user), password: user.password };
+  }
+
   async create(data: {
     email: string;
     password: string;
@@ -39,6 +49,19 @@ export class PrismaUserRepository implements IUserRepository {
     lastName: string;
   }): Promise<IUser> {
     const user = await this.prisma.user.create({ data });
+    return this.mapOne(user);
+  }
+
+  async update(
+    id: string,
+    data: {
+      firstName?: string;
+      lastName?: string;
+      avatar?: string;
+      password?: string;
+    },
+  ): Promise<IUser> {
+    const user = await this.prisma.user.update({ where: { id }, data });
     return this.mapOne(user);
   }
 

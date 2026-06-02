@@ -8,11 +8,13 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto, UpdateCategoryDto } from './dto';
 import { PaginationDto } from '../../common/dto';
 import { Public } from '../../common/decorators/public.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { Role } from '../../common/constants/app.constant';
 
 @ApiTags('Categories')
 @Controller('categories')
@@ -34,19 +36,25 @@ export class CategoriesController {
   }
 
   @Post()
-  @ApiOperation({ summary: 'Create category' })
+  @Roles(Role.ADMIN)
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: 'Create category (Admin)' })
   create(@Body() dto: CreateCategoryDto) {
     return this.categoriesService.create(dto);
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Update category' })
+  @Roles(Role.ADMIN)
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: 'Update category (Admin)' })
   update(@Param('id') id: string, @Body() dto: UpdateCategoryDto) {
     return this.categoriesService.update(id, dto);
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete category' })
+  @Roles(Role.ADMIN)
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: 'Delete category (Admin)' })
   remove(@Param('id') id: string) {
     return this.categoriesService.remove(id);
   }

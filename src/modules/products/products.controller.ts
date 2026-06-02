@@ -8,10 +8,12 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
 import { CreateProductDto, UpdateProductDto, ProductQueryDto } from './dto';
 import { Public } from '../../common/decorators/public.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { Role } from '../../common/constants/app.constant';
 
 @ApiTags('Products')
 @Controller('products')
@@ -47,19 +49,25 @@ export class ProductsController {
   }
 
   @Post()
-  @ApiOperation({ summary: 'Create product' })
+  @Roles(Role.ADMIN)
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: 'Create product (Admin)' })
   create(@Body() dto: CreateProductDto) {
     return this.productsService.create(dto);
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Update product' })
+  @Roles(Role.ADMIN)
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: 'Update product (Admin)' })
   update(@Param('id') id: string, @Body() dto: UpdateProductDto) {
     return this.productsService.update(id, dto);
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete product (soft delete)' })
+  @Roles(Role.ADMIN)
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: 'Delete product (Admin)' })
   remove(@Param('id') id: string) {
     return this.productsService.remove(id);
   }

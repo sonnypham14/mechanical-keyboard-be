@@ -8,11 +8,13 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BrandsService } from './brands.service';
 import { CreateBrandDto, UpdateBrandDto } from './dto';
 import { PaginationDto } from '../../common/dto';
 import { Public } from '../../common/decorators/public.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { Role } from '../../common/constants/app.constant';
 
 @ApiTags('Brands')
 @Controller('brands')
@@ -34,19 +36,25 @@ export class BrandsController {
   }
 
   @Post()
-  @ApiOperation({ summary: 'Create brand' })
+  @Roles(Role.ADMIN)
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: 'Create brand (Admin)' })
   create(@Body() dto: CreateBrandDto) {
     return this.brandsService.create(dto);
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Update brand' })
+  @Roles(Role.ADMIN)
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: 'Update brand (Admin)' })
   update(@Param('id') id: string, @Body() dto: UpdateBrandDto) {
     return this.brandsService.update(id, dto);
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete brand' })
+  @Roles(Role.ADMIN)
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: 'Delete brand (Admin)' })
   remove(@Param('id') id: string) {
     return this.brandsService.remove(id);
   }

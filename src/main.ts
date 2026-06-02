@@ -2,6 +2,8 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import helmet from 'helmet';
+import compression from 'compression';
 import { AppModule } from './app.module';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
@@ -16,7 +18,11 @@ async function bootstrap() {
   const port = configService.get<number>('app.port');
   const frontendUrl = configService.get<string>('app.frontendUrl');
 
-  // 1. Global prefix
+  // 1. Security headers + gzip compression
+  app.use(helmet());
+  app.use(compression());
+
+  // 2. Global prefix
   app.setGlobalPrefix(API_FULL_PREFIX);
 
   // 2. CORS
